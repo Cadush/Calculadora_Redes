@@ -43,5 +43,10 @@ source venv/bin/activate  # Linux/Mac
 # ou
 venv\Scripts\activate     # Windows
 
+### Uso
+Execute o script diretamente:
+python calculadora_redes.py
+
+
 # 3. Instale a dependência
 pip install rich
