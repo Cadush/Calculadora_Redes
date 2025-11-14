@@ -12,15 +12,15 @@
 
 ## Funcionalidades
 
-| Recurso | Descrição |
-|--------|-----------|
-| **Cálculo de Sub-rede** | Rede, máscara, broadcast, hosts, wildcard, classe, privada |
-| **Subnetting por Hosts** | Divide a rede em sub-redes com base no número de hosts desejado |
-| **Divisão por VLANs** | Cria sub-redes iguais para N VLANs (com ID e nome) |
-| **Modo Combinado** | Subnetting + VLANs sem sobreposição |
-| **Interface Rica (Rich)** | Tabelas coloridas, progresso, painéis e entrada amigável |
-| **Exportar JSON** | Salva todos os resultados em arquivo `.json` |
-| **DNS Personalizado** | Adiciona DNS em cada sub-rede (ex: 8.8.8.8) |
+| Recurso                  | Descrição                                                                 |
+|--------------------------|---------------------------------------------------------------------------|
+| **Cálculo de Sub-rede**  | Rede, máscara, broadcast, hosts, wildcard, classe, privada                |
+| **Subnetting por Hosts** | Divide a rede em sub-redes com base no número de hosts desejado           |
+| **Divisão por VLANs**    | Cria sub-redes iguais para N VLANs (com ID e nome)                        |
+| **Modo Combinado**       | Subnetting + VLANs sem sobreposição                                       |
+| **Interface Rica (Rich)**| Tabelas coloridas, progresso, painéis e entrada amigável                  |
+| **Exportar JSON**        | Salva todos os resultados em arquivo `.json`                              |
+| **DNS Personalizado**    | Adiciona DNS em cada sub-rede (ex: 8.8.8.8)                                |
 
 ---
 
@@ -42,11 +42,12 @@ python -m venv venv
 source venv/bin/activate  # Linux/Mac
 # ou
 venv\Scripts\activate     # Windows
+---
+
 
 ### Uso
 Execute o script diretamente:
 python calculadora_redes.py
 
-
-# 3. Instale a dependência
-pip install rich
+Licença
+MIT License © 2025
