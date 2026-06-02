@@ -110,17 +110,96 @@ if __name__ == "__main__":
         menu.add_row("1", "Subnetting por número de hosts + DNS")
         menu.add_row("2", "Dividir em VLANs iguais + DNS")
         menu.add_row("3", "Ambos (sem sobreposição)")
-        menu.add_row("4", "Sair")
+        menu.add_row("4", "Quantos IPs em um CIDR (ex: /20, /16)")
+        menu.add_row("5", "Converter máscara → CIDR (ex: 10.0.0.0 255.255.255.248)")
+        menu.add_row("6", "Identificar IP isolado (ex: 177.172.158.158)")
+        menu.add_row("7", "Sair")
         console.print(menu)
 
-        opcao = console.input("\n[bold yellow]➤ Escolha (1-4): [/]").strip()
+        opcao = console.input("\n[bold yellow]➤ Escolha (1-7): [/]").strip()
 
-        if opcao not in ["1", "2", "3", "4"]:
+        if opcao not in ["1", "2", "3", "4", "5", "6", "7"]:
             console.print("❌ Opção inválida!\n", style="bold red")
             continue
-        if opcao == "4":
+        if opcao == "7":
             console.print("\nSaindo... Até a próxima! 🚀\n", style="bold green")
             break
+
+        # === Opção 4: Quantos IPs em um CIDR ===
+        if opcao == "4":
+            cidr_input = console.input("\n[bold cyan]Digite o CIDR[/] (ex: /20 ou 192.168.0.0/20): ").strip()
+            try:
+                if cidr_input.startswith("/"):
+                    prefixo = int(cidr_input[1:])
+                    total = 2 ** (32 - prefixo)
+                    hosts = total - 2 if total > 2 else 0
+                    mascara = str(ipaddress.IPv4Network(f"0.0.0.0/{prefixo}", strict=False).netmask)
+                else:
+                    net = ipaddress.IPv4Network(cidr_input, strict=False)
+                    prefixo = net.prefixlen
+                    total = net.num_addresses
+                    hosts = total - 2 if total > 2 else 0
+                    mascara = str(net.netmask)
+
+                tabela = Table(title=f"CIDR /{prefixo}", box=box.ROUNDED)
+                tabela.add_column("Campo", style="bold cyan")
+                tabela.add_column("Valor", style="green")
+                tabela.add_row("Prefixo", f"/{prefixo}")
+                tabela.add_row("Máscara", mascara)
+                tabela.add_row("Total de endereços", str(total))
+                tabela.add_row("Hosts utilizáveis", str(hosts))
+                console.print(Panel(tabela, style="bold green"))
+            except Exception as e:
+                console.print(f"❌ Erro: {e}\n", style="bold red")
+            continue
+
+        # === Opção 5: Converter máscara para CIDR ===
+        if opcao == "5":
+            entrada = console.input("\n[bold cyan]Digite IP + máscara[/] (ex: 10.0.0.0 255.255.255.248): ").strip()
+            try:
+                partes = entrada.split()
+                if len(partes) != 2:
+                    raise ValueError("Formato esperado: IP MÁSCARA (separados por espaço)")
+                ip, mascara = partes
+                cidr = calc.mascara_para_cidr(mascara)
+                net = ipaddress.IPv4Network(f"{ip}/{cidr}", strict=False)
+                total = net.num_addresses
+                hosts = total - 2 if total > 2 else 0
+
+                tabela = Table(title=f"Conversão: {mascara} → /{cidr}", box=box.ROUNDED)
+                tabela.add_column("Campo", style="bold cyan")
+                tabela.add_column("Valor", style="green")
+                tabela.add_row("IP", ip)
+                tabela.add_row("Máscara", mascara)
+                tabela.add_row("CIDR", f"/{cidr}")
+                tabela.add_row("Rede", str(net.network_address))
+                tabela.add_row("Broadcast", str(net.broadcast_address))
+                tabela.add_row("Total de endereços", str(total))
+                tabela.add_row("Hosts utilizáveis", str(hosts))
+                console.print(Panel(tabela, style="bold green"))
+            except Exception as e:
+                console.print(f"❌ Erro: {e}\n", style="bold red")
+            continue
+
+        # === Opção 6: Identificar IP isolado ===
+        if opcao == "6":
+            ip_input = console.input("\n[bold cyan]Digite o IP[/] (ex: 177.172.158.158): ").strip()
+            try:
+                ip_obj = ipaddress.IPv4Address(ip_input)
+                tabela = Table(title=f"IP: {ip_input}", box=box.ROUNDED)
+                tabela.add_column("Campo", style="bold cyan")
+                tabela.add_column("Valor", style="green")
+                tabela.add_row("Endereço", str(ip_obj))
+                tabela.add_row("CIDR (host único)", "/32")
+                tabela.add_row("Máscara", "255.255.255.255")
+                tabela.add_row("Tipo", "Host isolado (sem sub-rede especificada)")
+                tabela.add_row("Classe", calc.obter_classe(ip_obj))
+                tabela.add_row("Privado", "Sim" if ipaddress.IPv4Address(ip_input).is_private else "Não")
+                console.print(Panel(tabela, style="bold green"))
+                console.print("[dim]💡 Sem máscara informada, um IP isolado é sempre /32 (1 host).[/]\n")
+            except Exception as e:
+                console.print(f"❌ Erro: {e}\n", style="bold red")
+            continue
 
         # === Entrada de dados ===
         rede_base = console.input(f"\n[bold cyan]Rede base[/] (ex: 192.168.202.0/24): ").strip()
