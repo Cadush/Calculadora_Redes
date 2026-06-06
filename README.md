@@ -1,6 +1,6 @@
 # Calculadora_Redes
 
-![Badge em Desenvolvimento](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
+![Badge em Pronta !](https://img.shields.io/badge/status-em%20Pronta-yellow)
 ![Python](https://img.shields.io/badge/python-3.8%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Rich](https://img.shields.io/badge/Interface-Rich%20Terminal-magenta)
